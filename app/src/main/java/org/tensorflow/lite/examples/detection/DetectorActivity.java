@@ -572,6 +572,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   }
 
+
+  private String prev_label ="";
+
   private void onFacesDetected(long currTimestamp, List<Face> faces, boolean add) {
 
 
@@ -683,13 +686,32 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             confidence = conf;
             label = result.getTitle();
 
+//            if(label != null && prev_label != label) {
+//              count = 11;
+//            }
 
-            if(10 < count) {
-              
-
-              tts2(label + "님 마스크를 껴주세요");
+            if(70 < count ) {
+              tts2(" 야 임마");
               count = 0;
+              prev_label = label;
             }
+            else if(50 < count && count < 55) {
+              tts2(label + " 마스크 끼라고");
+              count = 55;
+              prev_label = label;
+            }
+            else if(30 < count && count < 35) {
+              tts2(label + "님 마스크 껴주세요");
+              count = 35;
+              prev_label = label;
+
+            }
+            else if(10 < count && count < 15) {
+              tts2(label + "님 마스크를 껴주시겠어요?");
+              count = 15;
+              prev_label = label;
+            }
+
 
             if (result.getId().equals("0")) {
               color = Color.TRANSPARENT;
