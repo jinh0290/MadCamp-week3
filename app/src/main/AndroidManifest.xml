@@ -30,10 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SoundActivity"
-            android:theme="@style/Transparent">
-        </activity>
 
     </application>
 </manifest>

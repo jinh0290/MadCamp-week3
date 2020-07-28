@@ -30,8 +30,10 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.hardware.camera2.CameraCharacteristics;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.speech.tts.TextToSpeech;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -51,10 +53,23 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
 import org.tensorflow.lite.examples.detection.env.BorderedText;
@@ -101,6 +116,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private MultiBoxTracker2 tracker2;
   private FaceDetector faceDetector2;
   private Classifier detector2;
+  private TextToSpeech textToSpeech;
 
   private static final DetectorMode MODE = DetectorMode.TF_OD_API;
   // Minimum detection confidence to track a detection.
@@ -163,6 +179,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       @Override
       public void onClick(View view) {
         onAddClick();
+      }
+    });
+
+
+    textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+      @Override
+      public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+          //사용할 언어를 설정
+          int result = textToSpeech.setLanguage(Locale.KOREA);
+          //언어 데이터가 없거나 혹은 언어가 지원하지 않으면...
+          if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//            Toast.makeText(MainActivity.this, "이 언어는 지원하지 않습니다.", Toast.LENGTH_SHORT).show();
+          } else {
+//            btnEnter.setEnabled(true);
+            //음성 톤
+            textToSpeech.setPitch(0.7f);
+            //읽는 속도
+            textToSpeech.setSpeechRate(1.2f);
+          }
+        }
       }
     });
 
@@ -819,8 +856,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 //              color = Color.TRANSPARENT;
               count ++;
               if(count == 10) {
-                Intent intent = new Intent(getApplicationContext(),SoundActivity.class);
-                startActivityForResult(intent,1001);//액티비티 띄우기
+                tts2("진혁님 안녕하세요 하운님 마스크를 껴주세요 진혁님 안녕하세요 진혁님 안녕하세요 진혁님 안녕하세요");
               }
             }
           }
@@ -860,6 +896,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
   }
+
+
+  public void tts2(String text) {
+    textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+  }
+
 
 
 }
