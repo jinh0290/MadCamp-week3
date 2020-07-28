@@ -6,6 +6,6 @@
  - (https://github.com/estebanuri/facemaskdetector)
  
 <div>
- <img width="600" src="https://user-images.githubusercontent.com/46417267/88686597-35d5de80-d132-11ea-97fd-58fb97679ce2.PNG">
+ <img width="600" src="https://user-images.githubusercontent.com/46417267/88693881-cca69900-d13a-11ea-960b-ec82b98456ab.PNG">
 </div>
 
