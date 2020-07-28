@@ -39,6 +39,13 @@ import java.util.Vector;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.examples.detection.env.Logger;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static org.tensorflow.lite.examples.detection.DetectorActivity.faceInterface;
+
 /**
  * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
  * - https://github.com/tensorflow/models/tree/master/research/object_detection
@@ -96,6 +103,28 @@ public class TFLiteObjectDetectionAPIModel
   private HashMap<String, Recognition> registered = new HashMap<>();
   public void register(String name, Recognition rec) {
       registered.put(name, rec);
+
+     //DB에도 내용 저장해주기
+      Object feature= rec.getExtra();
+      HashMap<String, Object> map = new HashMap<>();
+      map.put("name", name);
+      map.put("feature", feature);
+      Call<ResponseBody> call = faceInterface.executePost(map);
+      call.enqueue(new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+          if(response.code() == 200){
+            //Toast.makeText(MainActivity.this, result.getData()+"", Toast.LENGTH_SHORT).show();
+            System.out.println("Successssssssssssssss");
+          } else if (response.code() == 400){
+            System.out.println("FAilllllllllllllllllll");
+          }
+        }
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+          System.out.println("Errorrrrrrrrrrrrrrrrㄱㄱㄱㄱㄱㄱ");
+        }
+      });
   }
 
   private TFLiteObjectDetectionAPIModel() {}

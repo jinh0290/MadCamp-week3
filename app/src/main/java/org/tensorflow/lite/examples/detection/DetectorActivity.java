@@ -18,6 +18,7 @@ package org.tensorflow.lite.examples.detection;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -51,6 +52,7 @@ import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
@@ -64,6 +66,12 @@ import org.tensorflow.lite.examples.detection.tflite.TFLiteObjectDetectionAPIMod
 import org.tensorflow.lite.examples.detection.tflite.TFLiteObjectDetectionAPIModel2;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker2;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -138,6 +146,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private FloatingActionButton fabAdd;
 
+  int count = 0;
+
+  //Nodejsd 서버부분
+  public static Retrofit retrofit;
+  public static FaceInterface faceInterface;
+  public static String BASE_URL = "http://192.249.19.242:7580";
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +188,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     FaceDetector detector2 = FaceDetection.getClient(options2);
 
     faceDetector2 = detector2;
+
+    //Nodejs 연결
+    retrofit = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    faceInterface = retrofit.create(FaceInterface.class);
 
 
     //checkWritePermission();
@@ -215,6 +237,31 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                       TF_OD_API_INPUT_SIZE2,
                       TF_OD_API_IS_QUANTIZED);
       //cropSize = TF_OD_API_INPUT_SIZE;
+
+      //초기 DB정보 넣어주기
+      Call<InitData> call = faceInterface.executeGet();
+      call.enqueue(new Callback<InitData>() {
+        @Override
+        public void onResponse(Call<InitData> call, Response<InitData> response) {
+          if(response.code() == 200){
+            ArrayList<MyData> ja = response.body().getData();
+            for(int i=0; i<ja.size();i++){
+              String name = ja.get(i).getName();
+              float[][] feature = ja.get(i).getFeature();
+              SimilarityClassifier.Recognition recognition = new SimilarityClassifier.Recognition(null, null, null, null);
+              recognition.setExtra(feature);
+              detector.register(name, recognition);
+            }
+          } else if (response.code() == 400){
+            //Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+          }
+        }
+        @Override
+        public void onFailure(Call<InitData> call, Throwable t) {
+          //Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+        }
+      });
+
     } catch (final IOException e) {
       e.printStackTrace();
       LOGGER.e(e, "Exception initializing classifier!");
@@ -770,6 +817,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             else {
               color = Color.RED;
 //              color = Color.TRANSPARENT;
+              count ++;
+              if(count == 10) {
+                Intent intent = new Intent(getApplicationContext(),SoundActivity.class);
+                startActivityForResult(intent,1001);//액티비티 띄우기
+              }
             }
           }
 

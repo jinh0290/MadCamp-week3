@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.naver.speech.clientapi:naverspeech-ncp-sdk-android:1.1.3@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/naverspeech-ncp-sdk-android-1.1.3.aar/7accf54f332782499587a14294112bde/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/naverspeech-ncp-sdk-android-1.1.3.aar/7accf54f332782499587a14294112bde/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.naver.speech.clientapi/naverspeech-ncp-sdk-android/1.1.3/39c0aae935c438a88418b19b4191e11df5a5bfb9/naverspeech-ncp-sdk-android-1.1.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.naver.speech.clientapi/naverspeech-ncp-sdk-android/1.1.3/5a22e11cf34acc15f2a234c0b9a67bed701a78a1/naverspeech-ncp-sdk-android-1.1.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
