@@ -35,8 +35,10 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -463,6 +465,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     //adding = false;
 
 
+
+
     if (mappedRecognitions.size() > 0) {
       LOGGER.i("Adding results");
       SimilarityClassifier.Recognition rec = mappedRecognitions.get(0);
@@ -561,7 +565,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         String label = "";
         float confidence = -1f;
-        Integer color = Color.BLUE;
+        Integer color = Color.TRANSPARENT;
         Object extra = null;
         Bitmap crop = null;
 
@@ -593,10 +597,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             confidence = conf;
             label = result.getTitle();
             if (result.getId().equals("0")) {
-              color = Color.GREEN;
+              color = Color.TRANSPARENT;
             }
             else {
-              color = Color.RED;
+              color = Color.TRANSPARENT;
             }
           }
 
@@ -626,6 +630,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         result.setExtra(extra);
         result.setCrop(crop);
         mappedRecognitions.add(result);
+
 
       }
 
@@ -739,7 +744,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         String label = "";
         float confidence = -1f;
-        Integer color = Color.BLUE;
+//        Integer color = Color.BLUE;
+        Integer color = Color.TRANSPARENT;
 
         final long startTime = SystemClock.uptimeMillis();
         final List<Classifier.Recognition> resultsAux2 = detector2.recognizeImage(faceBmp2);
@@ -759,9 +765,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             label = result2.getTitle();
             if (result2.getId().equals("0")) {
               color = Color.GREEN;
+//              color = Color.TRANSPARENT;
             }
             else {
               color = Color.RED;
+//              color = Color.TRANSPARENT;
             }
           }
 

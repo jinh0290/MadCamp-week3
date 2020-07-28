@@ -5,4 +5,5 @@
     <color name="tfe_color_accent">#425066</color>
 
     <color name="tfe_semi_transparent">#66000000</color>
+    <color name="transparent">#00000000</color>
 </resources>
