@@ -574,6 +574,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private void onFacesDetected(long currTimestamp, List<Face> faces, boolean add) {
 
+
+
     cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
     final Canvas canvas = new Canvas(cropCopyBitmap);
     final Paint paint = new Paint();
@@ -680,6 +682,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             confidence = conf;
             label = result.getTitle();
+
+
+            if(10 < count) {
+              
+
+              tts2(label + "님 마스크를 껴주세요");
+              count = 0;
+            }
+
             if (result.getId().equals("0")) {
               color = Color.TRANSPARENT;
             }
@@ -726,27 +737,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     updateResults(currTimestamp, mappedRecognitions);
 
-
-  }
-
-  // bounding box들 정보(mappedRecognitions 있으면 표시해주는 함수)
-  private void updateResults2(long currTimestamp, final List<Classifier.Recognition> mappedRecognitions) {
-
-    tracker2.trackResults(mappedRecognitions, currTimestamp);
-    trackingOverlay.postInvalidate();
-    computingDetection = false;
-
-
-    runOnUiThread(
-
-            new Runnable() {
-              @Override
-              public void run() {
-                showFrameInfo(previewWidth + "x" + previewHeight);
-                showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
-                showInference(lastProcessingTimeMs + "ms");
-              }
-            });
 
   }
 
@@ -855,9 +845,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
               color = Color.RED;
 //              color = Color.TRANSPARENT;
               count ++;
-              if(count == 10) {
-                tts2("진혁님 안녕하세요 하운님 마스크를 껴주세요 진혁님 안녕하세요 진혁님 안녕하세요 진혁님 안녕하세요");
-              }
             }
           }
 
@@ -896,6 +883,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
   }
+  // bounding box들 정보(mappedRecognitions 있으면 표시해주는 함수)
+  private void updateResults2(long currTimestamp, final List<Classifier.Recognition> mappedRecognitions) {
+
+    tracker2.trackResults(mappedRecognitions, currTimestamp);
+    trackingOverlay.postInvalidate();
+    computingDetection = false;
+
+
+    runOnUiThread(
+
+            new Runnable() {
+              @Override
+              public void run() {
+                showFrameInfo(previewWidth + "x" + previewHeight);
+                showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
+                showInference(lastProcessingTimeMs + "ms");
+              }
+            });
+
+  }
+
 
 
   public void tts2(String text) {
